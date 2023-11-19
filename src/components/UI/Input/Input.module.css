@@ -1,0 +1,12 @@
+.Input{
+    padding: .8rem .5rem;
+    font-size: medium;
+    border: 1px solid #c2c2c2;
+    border-radius: .4rem;
+    width: 250px;
+    box-sizing: border-box;
+}
+
+.Input:focus{
+    outline-color: #75bbf9;
+}

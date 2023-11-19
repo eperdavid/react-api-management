@@ -1,0 +1,14 @@
+.Buttons{
+    display: flex;
+    gap: .5rem;
+}
+
+.Row td{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #363636;
+    border-bottom: 1px solid #e2e2e2;
+    padding: 1rem .5rem;
+}
+

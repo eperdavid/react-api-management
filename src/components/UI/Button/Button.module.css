@@ -1,0 +1,24 @@
+.Button{
+    color: white;
+    border-radius: .4rem;
+    cursor: pointer;
+    min-height: 40px;
+    min-width: 40px;
+    font-weight: 500;
+}
+
+.primary{
+    background-color: #1b93fc;
+    border: 1px solid #3aa5fc;
+}
+
+.secondary{
+    background-color: #d8d8d8;
+    color: black;
+    border: none;
+}
+
+.danger{
+    background-color: #df3d3d;
+    border: 1px solid #f76464;
+}
