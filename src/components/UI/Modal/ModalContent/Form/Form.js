@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 
 import classes from './Form.module.css';
 
@@ -7,8 +7,8 @@ import Input from '../../../Input/Input';
 
 const Form = (props) => {
 
-    
-    //console.log(props.user);
+    console.log(props.user);    
+
 
     let content = null;
 

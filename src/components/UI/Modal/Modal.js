@@ -3,28 +3,37 @@ import classes from './Modal.module.css';
 
 import Backdrop from '../Backdrop/Backdrop';
 
-const modal = (props) => {
+const Modal = (props) => {
 
+    console.log("Modal");
     const formSubmit = (event) => {
         event.preventDefault();
     }
 
-    return(
+     return (
     <>
-    <Backdrop show={props.show}/>
-    <form className={classes.Modal} style={{opacity: props.show ? '1' : '0', transform: props.show ? 'translateY(0)' : 'translateY(-100vh)'}} onSubmit={formSubmit}>
-        <div className={classes.Header}>
-            {props.header}
-        </div>
-        <div className={classes.Body}>
-            {props.body}
-        </div>
-        <div className={classes.Footer}>
-            {props.buttons}
-        </div>
-    </form>
+      <Backdrop show={props.show} />
+      <form className={classes.Modal} style={{ opacity: props.show ? '1' : '0', transform: props.show ? 'translateY(0)' : 'translateY(-100vh)' }} onSubmit={formSubmit}>
+        {props.children}
+      </form>
     </>
-    );
+  );
 };
 
-export default modal;
+const Header = (props) => {
+    return <div className={classes.Header}>{props.children}</div>;
+};
+  
+const Body = (props) => {
+    return <div className={classes.Body}>{props.children}</div>;
+};
+  
+  const Footer = (props) => {
+    return <div className={classes.Footer}>{props.children}</div>;
+  };
+  
+  Modal.Header = Header;
+  Modal.Body = Body;
+  Modal.Footer = Footer;
+
+export default Modal;
