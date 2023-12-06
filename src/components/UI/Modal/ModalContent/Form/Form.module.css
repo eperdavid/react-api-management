@@ -8,3 +8,10 @@
     margin-top: 5px;
     width: 100%;
 }
+
+.ErrorMsg{
+    margin: 0;
+    font-size: small;
+    color: red;
+    text-align: center;
+}

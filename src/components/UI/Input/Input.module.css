@@ -10,3 +10,12 @@
 .Input:focus{
     outline-color: #75bbf9;
 }
+
+.Error{
+    background-color: #ff6a6a;
+    border-color: rgb(255, 24, 24);
+}
+
+.Error:focus{
+    outline-color: red;
+}

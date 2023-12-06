@@ -3,8 +3,9 @@
     z-index: 500;
     background-color: white;
     width: 70%;
+    border-radius: .3rem;
     border: 1px solid #ccc;
-    box-shadow: 1px 1px 1px black;
+    box-shadow: 0px 1px 15px #2e2e2e;
     left: 15%;
     top: 15%;
     box-sizing: border-box;

@@ -4,6 +4,9 @@
     width: 80%;
     max-width: 1200px;
     margin: 0 auto;
+    max-height: 80%;
+    border-radius: .5rem;
+    min-width: 600px;
 }
 
 .flexContainer{
@@ -25,6 +28,7 @@
     border-collapse: collapse;
 }
 
+
 .Table th{
     text-align: start;
     width: 100%;
@@ -37,9 +41,15 @@
 }
 
 .Table th:nth-last-child(2){
-    width: 150px;
+    width: 100px;
 }
 
 .Table thead{
     border-bottom: 1px solid #c2c2c2;
+}
+
+.centerText{
+    text-align: center;
+    padding: 3rem;
+    font-weight: 500;
 }

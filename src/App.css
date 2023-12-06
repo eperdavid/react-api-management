@@ -1,7 +1,8 @@
 .App{
   justify-content: center;
-  padding-top: 10rem;
-  height: 100vh;
+  padding: 5rem 1rem;
+  min-height: 100vh;
   background-color: #ccc;
   box-sizing: border-box;
+  overflow: auto;
 }

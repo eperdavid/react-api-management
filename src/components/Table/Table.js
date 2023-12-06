@@ -1,62 +1,101 @@
-import React, { useState, useEffect } from "react";
+import React, { useState ,useEffect } from "react";
 
 import classes from './Table.module.css';
 import Row from "./Row/Row";
 import Button from "../UI/Button/Button";
 import Input from "../UI/Input/Input";
 import Modal from "../UI/Modal/Modal";
+import Spinner from "../UI/Spinner/Spinner";
 
 import Form from "../UI/Modal/ModalContent/Form/Form";
 
 const Table = () => {
-    
-    const [users] = useState([
-        {id: 0, email: 'asl.com', name: 'Vaiajjfkglhdlfkgjdklfjgdfkélgjdfklégjdfklgjdfkglkjdfgasl nev', age: 28},
-        {id: 1, email: 'bsd.com', name: 'nev', age: 30},
-        {id: 2, email: 'ashh.com', name: 'Vaiajjfkglhdlfkgjdklfjgdfkélgjdfklégjdfklgjdfkglkjdfgasl nev', age: 29}
-    ]);
 
-    const [userData, setUserData] = useState({
-        id: "",
-        email: "",
-        name: "",
-        age: ""
-    });
+    const KEY = "b2d5f45a3e11430e922334ffb8a559c3";
+
+    const [error, setError] = useState(false);
+
+    const [users, setUsers] = useState([]);
 
     const [filteredUsers, setFilteredUsers] = useState(users);
 
-    const [modal, setModal] = useState({show: false, header: null, buttons: null});
+    useEffect(() => {
+        fetch(`https://crudcrud.com/api/${KEY}/users`)
+        .then(response => response.json())
+        .then(data => {
+            setUsers(data);
+            setLoading(false);
+        })
+        .catch(err => {
+            console.log(err);
+            setError(true); 
+            setLoading(false);
+        })
+    }, []);
+
+    useEffect(() => {
+        setFilteredUsers(users);
+        document.getElementById("search").value='';
+    }, [users]); 
+
+
+    const [userData, setUserData] = useState({
+        userIndex: '',
+        id: '',
+        email: {value: "", touched: false},
+        name: {value: "", touched: false},
+        age: {value: "", touched: false}
+    });
+
+    const closeModal = () => {
+        setModal(prevModal => ({...prevModal, show: false}));
+    }
+
+    const [modal, setModal] = useState({show: false, header: null, buttons: null, close: closeModal});
+
+    const [loading, setLoading] = useState(true);
+
+    const [errorMsg, setErrorMsg] = useState('');
 
     const userFilter = (event) => {
         setFilteredUsers(users.filter(user => user.email.toLowerCase().includes(event.target.value.toLowerCase())));
     }
 
     const inputChangeHandler = (event) => {
+        
         const {name, value} = event.target;
+
         setUserData(prevUser => ({
             ...prevUser,
-            [name]: value
+            [name]: {value: value, touched: true}
         }));
+
+        setErrorMsg('');
+        
     }
 
-    console.log("Table");
+    
 
     const openModal = (id, modalType) => {
 
         let user = {
-            email: '',
-            name: '',
-            age: ''
+            userIndex: '',
+            id: '',
+            email: {value: "", touched: false},
+            name: {value: "", touched: false},
+            age: {value: "", touched: false}
         };
         
         if(id !== null)
         {
-            const userIndex = users.findIndex(user => user.id === id);
+            const userIndex = users.findIndex(user => user._id === id);
 
             user={
-                email: users[userIndex].email,
-                name: users[userIndex].name,
-                age: users[userIndex].age,
+                userIndex: userIndex,
+                id: id,
+                email: {value: users[userIndex].email, touched: false},
+                name: {value: users[userIndex].name, touched: false},
+                age: {value: users[userIndex].age, touched: false},
             }
             
         }
@@ -67,24 +106,143 @@ const Table = () => {
     }
 
     const createUserHandler = () => {
-        console.log("create", userData);
+        const isValidEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+        if(userData.email.value && userData.name.value && userData.age.value && userData.age.value > 0 && userData.age.value <= 100)
+        {
+            if(userData.email.value.match(isValidEmail))
+            {   
+
+                fetch(`https://crudcrud.com/api/${KEY}/users`, {
+                    headers: { "Content-Type": "application/json; charset=utf-8" },
+                    method: 'POST',
+                    body: JSON.stringify({
+                        email: userData.email.value,
+                        name: userData.name.value,
+                        age: userData.age.value,
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    setUsers(prevUsers => ([
+                        ...prevUsers,
+                        {...data}
+                    ]));
+                    setModal(prevModal => ({...prevModal, show: false}));
+                })
+                .catch(err => {
+                    console.log(err);
+                    setError(true);
+                    setModal(prevModal => ({...prevModal, show: false}));
+                })
+            }
+            else{
+                setErrorMsg('Érvénytelen email');
+            }
+        }
+        else{
+            setUserData(prevUserData => ({
+                ...prevUserData,
+                email: {...prevUserData.email, touched: true},
+                name: {...prevUserData.name, touched: true},
+                age: {...prevUserData.age, touched: true}
+            }));
+        }
     }
 
     const updateUserHandler = () => {
-        console.log("update", userData);
+        const isValidEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+        if(userData.email.value && userData.name.value && userData.age.value && userData.age.value > 0 && userData.age.value <= 100)
+        {
+            if(userData.email.value.match(isValidEmail))
+            {
+                const updatedUsersArr = [...users]
+                updatedUsersArr[userData.userIndex] = {
+                    ...updatedUsersArr[userData.userIndex],
+                    email: userData.email.value,
+                    name: userData.name.value,
+                    age: userData.age.value
+                };
+
+
+                fetch(`https://crudcrud.com/api/${KEY}/users/${userData.id}`, {
+                    headers: {"Content-Type": "application/json"},
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        email: userData.email.value,
+                        name: userData.name.value,
+                        age: userData.age.value
+                    })
+                })
+                .then(() => {
+                    setUsers(updatedUsersArr);
+                    setModal(prevModal => ({...prevModal, show: false}));
+                })
+                .catch(err => {
+                    console.log(err);
+                    setError(true);
+                    setModal(prevModal => ({...prevModal, show: false}));
+                })
+
+            }
+            else{
+                setErrorMsg('Érvénytelen email');
+            }
+        }
+        else{
+            setUserData(prevUserData => ({
+                ...prevUserData,
+                email: {...prevUserData.email, touched: true},
+                name: {...prevUserData.name, touched: true},
+                age: {...prevUserData.age, touched: true}
+            }));
+        }
     }
 
     const deleteUserHandler = () => {
-        console.log("delete", userData);
+        const updatedUsersArr = [...users];
+        updatedUsersArr.splice(userData.userIndex, 1);
+
+        fetch(`https://crudcrud.com/api/${KEY}/users/${userData.id}`, {
+            method: 'DELETE'
+        })
+        .then(() => {
+            setUsers(updatedUsersArr);
+            setModal(prevModal => ({...prevModal, show: false}));
+        })
+        .catch(err => {
+            console.log(err);
+            setError(true);
+            setModal(prevModal => ({...prevModal, show: false}));
+        })
     }
 
+    let rows;
+
+    if(!loading)
+    {
+        if(error)
+        {
+            rows = <tr><td colSpan={4} className={classes.centerText}>Something went wrong</td></tr>
+        }
+        else{
+            if(filteredUsers.length > 0)
+            {
+                rows = filteredUsers.map(user => (
+                    <Row key={user._id} email={user.email} name={user.name} age={user.age} updateAction={() => openModal(user._id, "Update")} deleteAction={() => openModal(user._id, "Delete")} />
+                ));
+            }
+            else{
+                rows = <tr><td colSpan={4} className={classes.centerText}>No data</td></tr>
+            }
+        }
+        
+    }
+    else{
+        rows = <tr><td colSpan={4}><Spinner /></td></tr>
+    }
     
 
-    let rows = filteredUsers.map(user => (
-        <Row key={user.id} email={user.email} name={user.name} age={user.age} updateAction={() => openModal(user.id, "Update")} deleteAction={() => openModal(user.id, "Delete")} />
-    ));
-
-    let buttons = [<Button key={1} buttonType="secondary" type="button" clicked={() => setModal(prevModal => ({...prevModal, show: false}))}>Cancel</Button>];
+    let buttons = [<Button key={1} buttonType="secondary" type="button" clicked={closeModal}>Cancel</Button>];
         
         switch(modal.header) {
             case("Create"):
@@ -100,7 +258,6 @@ const Table = () => {
                 buttons = null;
         }
 
-
     return (
         <>
 
@@ -109,7 +266,7 @@ const Table = () => {
                 {modal.header}
             </Modal.Header>
             <Modal.Body>
-                <Form user={userData} action={modal.header} changed={inputChangeHandler} />
+                <Form user={userData} action={modal.header} changed={inputChangeHandler} error={errorMsg} />
             </Modal.Body>
             <Modal.Footer>
                 {buttons}
@@ -118,8 +275,8 @@ const Table = () => {
 
         <div className={classes.Table}>
             <div className={classes.flexContainer}>
-                <Input change={userFilter} placeholder="Search users" />
-                <Button className="addBtn" buttonType="primary" clicked={() => openModal(null, "Create")}>Add new user</Button>
+                <Input id="search" change={userFilter} placeholder="Search users by email" disabled={loading || error} />
+                <Button className="addBtn" buttonType="primary" disabled={loading || error} clicked={() => openModal(null, "Create")}>Add new user</Button>
             </div>
             <table>
                 <thead>

@@ -5,14 +5,13 @@ import Backdrop from '../Backdrop/Backdrop';
 
 const Modal = (props) => {
 
-    console.log("Modal");
     const formSubmit = (event) => {
         event.preventDefault();
     }
 
      return (
     <>
-      <Backdrop show={props.show} />
+      <Backdrop show={props.show} close={props.close} />
       <form className={classes.Modal} style={{ opacity: props.show ? '1' : '0', transform: props.show ? 'translateY(0)' : 'translateY(-100vh)' }} onSubmit={formSubmit}>
         {props.children}
       </form>
