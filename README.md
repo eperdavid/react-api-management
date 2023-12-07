@@ -6,7 +6,7 @@ In this project you can store informations about users. And you can interact wit
 ```
 git clone ...
 cd react-api-management
-nmp instal
+npm install
 npm start
 ```
 After this you have to visit https://crudcrud.com/ and copy the last part of generated API 'https://crudcrud.com/api/this_part_of_the_url' and paste into the KEY constant in the Table component. That's it. Now you can create/read/update and delete data.
